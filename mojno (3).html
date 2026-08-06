@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOJNO — гастрокафе в Смоленске</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,500;0,600;1,400&family=Manrope:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+  :root{
+    --bg: #FFFFFF;
+    --bg-soft: #F7F3F1;
+    --bg-card: #FBF8F6;
+    --text: #241A21;
+    --text-dim: #8C7A82;
+    --rose: #B5646F;
+    --rose-soft: #C98A93;
+    --rose-pale: #F1DCDF;
+    --gold: #A17A34;
+    --gold-pale: #EFE1C4;
+    --moss: #6E7A5B;
+    --line: rgba(36,26,33,0.12);
+    --radius: 6px;
+    --shadow: 0 18px 40px -20px rgba(36,26,33,0.22);
+  }
+
+  *{ box-sizing:border-box; margin:0; padding:0; }
+  html{ scroll-behavior:smooth; }
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:'Manrope', sans-serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{ color:inherit; text-decoration:none; }
+  button{ font-family:inherit; cursor:pointer; background:none; border:none; color:inherit; }
+  .wrap{ max-width:1140px; margin:0 auto; padding:0 32px; }
+  h1,h2,h3{ font-family:'Spectral', serif; font-weight:500; letter-spacing:-0.01em; }
+  em{ font-style:italic; color:var(--rose); }
+
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace;
+    font-size:11px; letter-spacing:0.16em; text-transform:uppercase; color:var(--gold);
+  }
+  .slogan-line{ font-family:'Spectral', serif; font-style:italic; font-size:15px; color:var(--text-dim); margin-top:6px; }
+
+  a:focus-visible, button:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible{
+    outline:2px solid var(--rose); outline-offset:3px;
+  }
+
+  .mark{ width:30px; height:30px; flex-shrink:0; }
+
+  /* ---------- header ---------- */
+  header.site{
+    position:sticky; top:0; z-index:40;
+    background:rgba(255,255,255,0.9);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav{ display:flex; align-items:center; justify-content:space-between; padding:18px 0; }
+  .logo{ display:flex; align-items:center; gap:10px; font-family:'Spectral', serif; font-size:19px; font-weight:600; letter-spacing:0.02em; }
+  .nav-links{ display:flex; gap:30px; font-size:14px; color:var(--text-dim); }
+  .nav-links a{ transition:color .2s; }
+  .nav-links a:hover{ color:var(--rose); }
+  .nav-cta{
+    font-family:'IBM Plex Mono', monospace; font-size:12px; letter-spacing:0.05em;
+    background:var(--rose); color:#fff;
+    padding:10px 18px; border-radius:var(--radius);
+    transition:background .2s; white-space:nowrap;
+  }
+  .nav-cta:hover{ background:#9E5560; }
+
+  /* ---------- hero ---------- */
+  .hero{ padding:76px 0 0; }
+  .hero-top{ max-width:64ch; }
+  .hero h1{ font-size:clamp(34px,5vw,54px); line-height:1.08; margin:16px 0 22px; }
+  .hero p.lede{ color:var(--text-dim); font-size:17px; max-width:52ch; margin-bottom:34px; }
+  .hero-actions{ display:flex; gap:14px; flex-wrap:wrap; margin-bottom:52px; }
+  .btn{ display:inline-block; padding:14px 24px; border-radius:var(--radius); font-size:14px; font-weight:600; transition:transform .2s, background .2s, color .2s, border-color .2s; border:1px solid transparent; }
+  .btn-primary{ background:var(--rose); color:#fff; }
+  .btn-primary:hover{ background:#9E5560; transform:translateY(-1px); }
+  .btn-ghost{ border-color:var(--line); color:var(--text); }
+  .btn-ghost:hover{ border-color:var(--gold); color:var(--gold); }
+
+  .hero-stats{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
+    background:var(--line); border:1px solid var(--line); border-radius:8px; overflow:hidden;
+  }
+  .hero-stats div{ background:var(--bg-card); padding:22px 24px; }
+  .hero-stats .num{ font-family:'Spectral', serif; font-size:26px; color:var(--rose); }
+  .hero-stats .cap{ font-size:13px; color:var(--text-dim); margin-top:6px; }
+
+  /* ---------- slogan ticker ---------- */
+  .ticker{
+    margin-top:56px; border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+    overflow:hidden; white-space:nowrap; padding:16px 0; background:var(--bg-soft);
+  }
+  .ticker-track{ display:inline-flex; gap:56px; animation:scroll 34s linear infinite; }
+  .ticker-track span{
+    font-family:'Spectral', serif; font-style:italic; font-size:16px; color:var(--text-dim);
+    display:inline-flex; align-items:center; gap:56px;
+  }
+  .ticker-track span::after{ content:"·"; color:var(--gold); margin-left:56px; }
+  @keyframes scroll{ from{ transform:translateX(0); } to{ transform:translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce){ .ticker-track{ animation:none; } }
+
+  /* ---------- format ---------- */
+  .format{ padding:76px 0; }
+  .format-head{ max-width:56ch; margin-bottom:48px; }
+  .format-head h2{ font-size:clamp(26px,3.2vw,36px); margin-top:12px; }
+  .format-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line); border-radius:8px; overflow:hidden; }
+  .format-item{ background:var(--bg); padding:30px 26px; }
+  .format-item .time{ font-family:'IBM Plex Mono', monospace; font-size:12px; color:var(--gold); margin-bottom:14px; }
+  .format-item h3{ font-size:19px; margin-bottom:8px; }
+  .format-item p{ font-size:14px; color:var(--text-dim); }
+
+  /* ---------- menu ---------- */
+  .menu{ padding:76px 0; border-top:1px solid var(--line); background:var(--bg-soft); }
+  .menu-top{ max-width:60ch; margin-bottom:36px; }
+  .menu-top h2{ font-size:clamp(26px,3.2vw,36px); margin-top:12px; }
+
+  .menu-switch{ display:flex; gap:22px; margin-bottom:22px; }
+  .switch-btn{
+    font-family:'Spectral', serif; font-size:18px; padding:8px 2px;
+    color:var(--text-dim); border-bottom:2px solid transparent; transition:color .2s, border-color .2s;
+  }
+  .switch-btn.active{ color:var(--text); border-color:var(--rose); }
+  .switch-btn:hover{ color:var(--rose); }
+
+  .menu-cats{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:32px; }
+  .menu-cats[hidden]{ display:none; }
+  .cat-chip{
+    font-family:'IBM Plex Mono', monospace; font-size:11.5px; letter-spacing:0.03em;
+    padding:8px 14px; border:1px solid var(--line); border-radius:999px; color:var(--text-dim); background:var(--bg);
+    transition:border-color .2s, color .2s, background .2s;
+  }
+  .cat-chip.active{ background:var(--gold-pale); border-color:var(--gold); color:#6B4F1F; }
+  .cat-chip:hover{ border-color:var(--rose); color:var(--rose); }
+
+  .panel[hidden]{ display:none; }
+  .panel-body{ background:var(--bg); border:1px solid var(--line); border-radius:8px; padding:8px 28px 20px; }
+  .panel-sub{
+    font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.1em; text-transform:uppercase;
+    color:var(--text-dim); margin:26px 0 10px;
+  }
+  .panel-sub:first-child{ margin-top:20px; }
+  .dish-grid{ display:grid; grid-template-columns:1fr 1fr; gap:0 32px; }
+  .dish{ display:flex; justify-content:space-between; gap:14px; padding:11px 0; border-top:1px dashed var(--line); }
+  .dish-grid .dish:nth-child(1),
+  .dish-grid .dish:nth-child(2){ border-top:none; }
+  .dish .name{ font-size:14.5px; }
+  .dish .name small{ display:block; color:var(--text-dim); font-size:12px; margin-top:2px; }
+  .dish .price{ font-family:'IBM Plex Mono', monospace; font-size:13px; color:var(--gold); white-space:nowrap; }
+
+  .menu-note{ margin-top:24px; font-size:13px; color:var(--text-dim); display:flex; gap:24px; flex-wrap:wrap; }
+
+  /* ---------- location ---------- */
+  .location{ padding:76px 0 0; }
+  .location-top{ display:grid; grid-template-columns:1fr 1fr; gap:56px; padding-bottom:56px; }
+  .location h2{ font-size:clamp(24px,3vw,32px); margin:12px 0 22px; }
+  .info-row{ display:flex; gap:14px; padding:16px 0; border-top:1px solid var(--line); }
+  .info-row:first-of-type{ border-top:none; }
+  .info-row .label{ font-family:'IBM Plex Mono', monospace; font-size:11px; letter-spacing:0.06em; text-transform:uppercase; color:var(--text-dim); width:110px; flex-shrink:0; padding-top:2px; }
+  .info-row .value{ font-size:15px; }
+  .info-row .value small{ display:block; color:var(--text-dim); font-size:13px; margin-top:4px; }
+  .location-visual{
+    border:1px solid var(--line); border-radius:8px; overflow:hidden; min-height:280px;
+    background: radial-gradient(circle at 30% 25%, var(--rose-pale), transparent 55%), var(--bg-card);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .location-visual .mark{ width:56px; height:56px; opacity:0.8; }
+
+  .map-embed{ border-top:1px solid var(--line); }
+  .map-embed iframe{ width:100%; height:420px; border:0; display:block; filter:saturate(0.85); }
+  .map-fallback{
+    display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;
+    padding:14px 0; font-size:13px; color:var(--text-dim);
+  }
+  .map-fallback a{ color:var(--gold); font-family:'IBM Plex Mono', monospace; font-size:12px; }
+  .map-fallback a:hover{ color:var(--rose); }
+
+  /* ---------- footer ---------- */
+  footer{ border-top:1px solid var(--line); padding:48px 0 36px; }
+  .footer-row{ display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:16px; }
+  footer .logo{ margin-bottom:0; }
+  .footer-links{ display:flex; gap:26px; font-size:13px; color:var(--text-dim); }
+  .footer-links a:hover{ color:var(--rose); }
+  .footer-slogan{ font-family:'Spectral', serif; font-style:italic; color:var(--text-dim); font-size:14px; margin-top:18px; }
+  .footer-bottom{
+    margin-top:28px; padding-top:20px; border-top:1px solid var(--line);
+    font-family:'IBM Plex Mono', monospace; font-size:11px; color:var(--text-dim);
+    display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+
+  /* ---------- reservation modal ---------- */
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(36,26,33,0.45); backdrop-filter:blur(3px);
+    display:flex; align-items:center; justify-content:center; padding:20px; z-index:100;
+  }
+  .modal-overlay[hidden]{ display:none; }
+  .modal{
+    background:var(--bg); border-radius:10px; max-width:440px; width:100%;
+    padding:34px 30px 28px; position:relative; box-shadow:var(--shadow);
+    max-height:90vh; overflow-y:auto;
+  }
+  .modal-close{ position:absolute; top:16px; right:18px; font-size:16px; color:var(--text-dim); }
+  .modal-close:hover{ color:var(--rose); }
+  .modal h3{ font-size:23px; margin-bottom:8px; }
+  .modal-sub{ font-size:13.5px; color:var(--text-dim); margin-bottom:22px; }
+  #reserveForm label{ display:block; font-size:12.5px; color:var(--text-dim); margin-bottom:14px; }
+  #reserveForm input, #reserveForm select, #reserveForm textarea{
+    display:block; width:100%; margin-top:6px; padding:10px 4px;
+    border:none; border-bottom:1px solid var(--line); background:transparent;
+    font-family:'Manrope', sans-serif; font-size:14.5px; color:var(--text); resize:vertical;
+  }
+  #reserveForm input:focus, #reserveForm select:focus, #reserveForm textarea:focus{ border-color:var(--rose); }
+  .form-row{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  #reserveSuccess{ text-align:center; padding:10px 0; }
+  #reserveSuccess h3{ margin-bottom:10px; }
+
+  @media (max-width: 860px){
+    .hero-stats{ grid-template-columns:1fr; }
+    .format-row{ grid-template-columns:1fr; }
+    .location-top{ grid-template-columns:1fr; }
+    .dish-grid{ grid-template-columns:1fr; }
+    .dish-grid .dish:nth-child(2){ border-top:1px dashed var(--line); }
+    .nav-links{ display:none; }
+    .form-row{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site">
+  <div class="wrap nav">
+    <a href="#" class="logo">
+      <svg class="mark" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="12" r="7" fill="var(--rose)" opacity="0.85"/>
+        <circle cx="29" cy="24" r="7" fill="var(--gold)" opacity="0.8"/>
+        <circle cx="11" cy="24" r="7" fill="var(--moss)" opacity="0.75"/>
+        <circle cx="20" cy="20" r="5" fill="var(--bg)"/>
+      </svg>
+      MOJNO
+    </a>
+    <nav class="nav-links">
+      <a href="#format">Формат</a>
+      <a href="#menu">Меню</a>
+      <a href="#location">Адрес</a>
+    </nav>
+    <button class="nav-cta" data-reserve-open>Забронировать стол</button>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <div class="hero-top">
+      <p class="eyebrow">Гастрокафе · Смоленск</p>
+      <h1>Нескучная еда <em>на каждый день</em></h1>
+      <p class="lede">От сырников в десять утра до бокала грузинского вина ближе к полуночи — одна кухня, один бар и повод заглянуть в любое время дня.</p>
+      <div class="hero-actions">
+        <button class="btn btn-primary" data-reserve-open>Забронировать стол</button>
+        <a href="#menu" class="btn btn-ghost">Смотреть меню</a>
+      </div>
+    </div>
+
+    <div class="hero-stats">
+      <div>
+        <div class="num">150+</div>
+        <div class="cap">позиций на кухне и в баре</div>
+      </div>
+      <div>
+        <div class="num">40+</div>
+        <div class="cap">авторских напитков в баре</div>
+      </div>
+      <div>
+        <div class="num">8</div>
+        <div class="cap">видов брускетт на одной тарелке</div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track">
+      <span>Нескучная еда на каждый день</span>
+      <span>От завтрака до бара — без антракта</span>
+      <span>Меню, в котором приятно заблудиться</span>
+      <span>Своя кухня, свой бар, один адрес</span>
+      <span>Нескучная еда на каждый день</span>
+      <span>От завтрака до бара — без антракта</span>
+      <span>Меню, в котором приятно заблудиться</span>
+      <span>Своя кухня, свой бар, один адрес</span>
+    </div>
+  </div>
+
+  <section class="format wrap" id="format">
+    <div class="format-head">
+      <p class="eyebrow">Один адрес, три формата</p>
+      <h2>Как меняется MOJNO в течение дня</h2>
+      <p class="slogan-line">Обед случайно превращается в вечер — и это нормально.</p>
+    </div>
+    <div class="format-row">
+      <div class="format-item">
+        <div class="time">10:00 — 12:00</div>
+        <h3>Завтраки</h3>
+        <p>Сырники, большие завтраки с яйцом пашот, омлеты с шампиньонами и моцареллой.</p>
+      </div>
+      <div class="format-item">
+        <div class="time">весь день</div>
+        <h3>Основное меню</h3>
+        <p>Салаты, паста и ризотто, стейки и бургеры, супы и горячие закуски — без деления на «до» и «после обеда».</p>
+      </div>
+      <div class="format-item">
+        <div class="time">до поздна</div>
+        <h3>Бар</h3>
+        <p>Крафтовое пиво, авторские коктейли, шоты, крепкий алкоголь и винная карта из шести стран.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="menu" id="menu">
+    <div class="wrap">
+      <div class="menu-top">
+        <p class="eyebrow">Полное меню</p>
+        <h2>Что у нас есть</h2>
+        <p class="slogan-line">Кухня и бар живут по одной карте — листайте, выбирайте, повторяйте.</p>
+      </div>
+
+      <div class="menu-switch" role="tablist" aria-label="Раздел меню">
+        <button class="switch-btn active" data-section-btn="kitchen">Кухня</button>
+        <button class="switch-btn" data-section-btn="bar">Бар</button>
+      </div>
+
+      <div class="menu-cats" data-section-group="kitchen">
+        <button class="cat-chip active" data-cat-btn="breakfast">Завтраки</button>
+        <button class="cat-chip" data-cat-btn="starters">Закуски и салаты</button>
+        <button class="cat-chip" data-cat-btn="pasta">Паста и ризотто</button>
+        <button class="cat-chip" data-cat-btn="soups">Супы</button>
+        <button class="cat-chip" data-cat-btn="mains">Горячее</button>
+        <button class="cat-chip" data-cat-btn="sides">Гарниры</button>
+        <button class="cat-chip" data-cat-btn="desserts">Десерты</button>
+      </div>
+      <div class="menu-cats" data-section-group="bar" hidden>
+        <button class="cat-chip active" data-cat-btn="beer">Крафтовое пиво</button>
+        <button class="cat-chip" data-cat-btn="cocktails">Коктейли</button>
+        <button class="cat-chip" data-cat-btn="shots">Шоты и сеты</button>
+        <button class="cat-chip" data-cat-btn="spirits">Крепкий алкоголь</button>
+        <button class="cat-chip" data-cat-btn="wine">Вино</button>
+        <button class="cat-chip" data-cat-btn="coffee">Кофе и чай</button>
+      </div>
+
+      <div class="menu-panels">
+
+        <div class="panel" data-section="kitchen" data-cat="breakfast">
+          <div class="panel-body">
+          <div class="dish-grid">
+            <div class="dish"><span class="name">Сырники с протёртой клубникой и сметаной</span><span class="price">400 ₽</span></div>
+            <div class="dish"><span class="name">Большой завтрак «Для мальчика»<small>глазунья, охотничьи колбаски, бекон</small></span><span class="price">500 ₽</span></div>
+            <div class="dish"><span class="name">Большой завтрак «Для девочки»<small>яйцо пашот, авокадо, лосось слабой соли</small></span><span class="price">530 ₽</span></div>
+            <div class="dish"><span class="name">Омлет с шампиньонами, томатами и моцареллой<small>+ бекон 125 ₽</small></span><span class="price">390 ₽</span></div>
+            <div class="dish"><span class="name">Бутерброд с лососем и яйцом пашот<small>на ремесленном овощном хлебе</small></span><span class="price">520 ₽</span></div>
+            <div class="dish"><span class="name">Бутерброд с трюфельным скрэмблом и креветками</span><span class="price">480 ₽</span></div>
+          </div>
+          </div>
+        </div>
+
+        <div class="panel" data-section="kitchen" data-cat="starters" hidden>
+          <div class="panel-body">
+          <p class="panel-sub">Брускетты</p>
+          <div class="dish-grid">
+            <div class="dish"><span class="name">Ассорти брускетт, 6 видов<small>ростбиф, тунец, лосось, курица и грибы, авокадо</small></span><span class="price">920 ₽</span></div>
+            <div class="dish"><span class="name">С креветками на пасте из печёного перца</span><span class="price">620 ₽</span></div>
+            <div class="dish"><span class="name">С томлёной говядиной</span><span class="price">550 ₽</span></div>
+            <div class="dish"><span class="name">Вителло тоннато из говяжьего языка</span><span class="price">720 ₽</span></div>
+          </div>
+          <p class="panel-sub">Салаты</p>
+          <div class="dish-grid">
+            <div class="dish"><span class="name">Зелёный салат</span><span class="price">480 ₽</span></div>
+            <div class="dish"><span class="name">С манго и морепродуктами</span><span class="price">690 ₽</span></div>
+            <div class="dish"><span class="name">С жареными баклажанами и сулугуни</span><span class="price">600 ₽</span></div>
+            <div class="dish"><span class="name">Цезарь с креветками</span><span class="price">620 ₽</span></div>
+            <div class="dish"><span class="name">Цезарь с лососем слабой соли</span><span class="price">640 ₽</span></div>
+            <div class="dish"><span class="name">Цезарь с курицей</span><span class="price">610 ₽</span></div>
+            <div class="dish"><span class="name">С тунцом, креветками и чёрными мидиями</span><span class="price">670 ₽</span></div>
+            <div class="dish"><span class="name">Тёплый, с курицей и шампиньонами</span><span class="price">590 ₽</span></div>
+            <div class="dish"><span class="name">Тёплый, из свинины с чипсами пармезана</span><span class="price">600 ₽</span></div>
+            <div class="dish"><span class="name">С тигровыми креветками и овощами-гриль</span><span class="price">670 ₽</span></div>
+          </div>
+          </div>
+        </div>
+
+        <div class="panel" data-section="kitchen" data-cat="pasta" hidden>
+          <div class="panel-body">
+          <div class="dish-grid">
+            <div class="dish"><span class="name">Шпинатная паста в томатном соусе с морепродуктами</span><span class="price">760 ₽</span></div>
+            <div class="dish"><span class="name">Тыквенная паста «Болоньезе» с говяжьей вырезкой</span><span class="price">730 ₽</span></div>
+            <div class="dish"><span class="name">Паста с морскими гребешками и устричным соусом</span><span class="price">680 ₽</span></div>
+            <div class="dish"><span class="name">Ризотто с грибами и трюфельной пастой</span><span class="price">630 ₽</span></div>
+            <div class="dish"><span class="name">Шпинатная паста с курицей, маскарпоне и грибами</span><span class="price">660 ₽</span></div>
+            <div class="dish"><span class="name">Ризотто с морепродуктами</span><span class="price">690 ₽</span></div>
+            <div class="dish"><span class="name">Тыквенная паста с говяжьим языком и грибами</span><span class="price">660 ₽</span></div>
+            <div class="dish"><span class="name">Паста «Карбонара»</span><span class="price">560 ₽</span></div>
+          </div>
+          </div>
+        </div>
+
+        <div class="panel" data-section="kitchen" data-cat="soups" hidden>
+          <div class="panel-body">
+          <div class="dish-grid">
+            <div class="dish"><span class="name">Сырный крем-суп с креветками «панко»</span><span class="price">500 ₽</span></div>
+            <div class="dish"><span class="name">Тыквенный крем-суп</span><span class="price">450 ₽</span></div>
+            <div class="dish"><span class="name">Борщ с копчёной куриной грудкой и гренками</span><span class="price">510 ₽</span></div>
+            <div class="dish"><span class="name">Крем-суп из шампиньонов с сырным багетом</span><span class="price">460 ₽</span></div>
+            <div class="dish"><span class="name">Том Ям с морепродуктами</span><span class="price">480 ₽</span></div>
+            <div class="dish"><span class="name">Солянка мясная с охотничьими колбасками</span><span class="price">490 ₽</span></div>
+          </div>
+          </div>
+        </div>
+
+        <div class="panel" data-section="kitchen" data-cat="mains" hidden>
+          <div class="panel-body">
+          <p class="panel-sub">Бургеры</p>
+          <div class="dish-grid">
+            <div class="dish"><span class="name">Бургер «MOJNO» из мраморной говядины</span><span class="price">800 ₽</span></div>
+            <div class="dish"><span class="name">Black бургер с куриной котлетой и грибным соусом</span><span class="price">760 ₽</span></div>
+            <div class="dish"><span class="name">Бургер с котлетой из тунца</span><span class="price">790 ₽</span></div>
+          </div>
+          <p class="panel-sub">Горячее и гриль</p>
+          <div class="dish-grid">
+            <div class="dish"><span class="name">Стейк-гриль из курицы с молодыми овощами</span><span class="price">670 ₽</span></div>
+            <div class="dish"><span class="name">Медальоны из свинины на пюре из сельдерея</span><span class="price">760 ₽</span></div>
+            <div class="dish"><span class="name">Куриный рулет в беконе с бататом</span><span class="price">750 ₽</span></div>
+            <div class="dish"><span class="name">Тунец слабой прожарки на пюре из баклажана</span><span class="price">830 ₽</span></div>
+            <div class="dish"><span class="name">Филе утки су-вид с печёным яблоком и грушей</span><span class="price">820 ₽</span></div>
+            <div class="dish"><span class="name">Филе лосося с запечённым апельсином</span><span class="price">1500 ₽</span></div>
+            <div class="dish"><span class="name">Филе дорадо с овощами и икорным соусом</span><span class="price">820 ₽</span></div>
+            <div class="dish"><span class="name">Стейк из говяжьей вырезки с овощами-гриль</span><span class="price">1370 ₽</span></div>
+            <div class="dish"><span class="name">Шашлычок из свинины с тыквой и фасолью</span><span class="price">750 ₽</span></div>
+            <div class="dish"><span class="name">Рёбрышки свиные-гриль с молодым картофелем</span><span class="price">660 ₽</span></div>
+            <div class="dish"><span class="name">Авокадо, запечённое с грушей и креветками</span><span class="price">660 ₽</span></div>
+            <div class="dish"><span class="name">Говядина томлёная с лепёшкой роти и сальсой</span><span class="price">660 ₽</span></div>
+            <div class="dish"><span class="name">Набор закусок к пиву</span><span class="price">960 ₽</span></div>
+          </div>
+          </div>
+        </div>
+
+        <div class="panel" data-section="kitchen" data-cat="sides" hidden>
+          <div class="panel-body">
+          <div class="dish-grid">
+            <div class="dish"><span class="name">Овощи-гриль</span><span class="price">340 ₽</span></div>
+            <div class="dish"><span class="name">Молодой печёный картофель с пармезаном</span><span class="price">370 ₽</span></div>
+            <div class="dish"><span class="name">Картофель фри с томатным соусом</span><span class="price">300 ₽</span></div>
+            <div class="dish"><span class="name">Шампиньоны-гриль с томатным конкассе</span><span class="price">360 ₽</span></div>
+          </div>
+          </div>
+        </div>
+
+        <div class="panel" data-section="kitchen" data-cat="desserts" hidden>
+          <div class="panel-body">
+          <div class="dish-grid">
+            <div class="dish"><span class="name">Десерт «Павлова», безе и клубника</span><span class="price">290 ₽</span></div>
+            <div class="dish"><span class="name">Трайфл «Красный бархат»</span><span class="price">280 ₽</span></div>
+            <div class="dish"><span class="name">Десерт «Три шоколада»</span><span class="price">280 ₽</span></div>
+            <div class="dish"><span class="name">Вишнёвый чизкейк</span><span class="price">195 ₽</span></div>
+            <div class="dish"><span class="name">Пирожное «Молочная девочка»</span><span class="price">240 ₽</span></div>
+            <div class="dish"><span class="name">Пирожное «Шоколадная девочка»</span><span class="price">230 ₽</span></div>
+            <div class="dish"><span class="name">Трайфл клубничный</span><span class="price">290 ₽</span></div>
+            <div class="dish"><span class="name">Трайфл с солёной карамелью</span><span class="price">280 ₽</span></div>
+            <div class="dish"><span class="name">Пирожное «Пражское»</span><span class="price">230 ₽</span></div>
+            <div class="dish"><span class="name">Пирожное «Цюрих»</span><span class="price">220 ₽</span></div>
+            <div class="dish"><span class="name">Мороженое, 1 топпинг и 2 посыпки на выбор</span><span class="price">280 ₽</span></div>
+          </div>
+          </div>
+        </div>
+
+        <div class="panel" data-section="bar" data-cat="beer" hidden>
+          <div class="panel-body">
+          <div class="dish-grid">
+            <div class="dish"><span class="name">Васька светлое 4%, 0,45 л</span><span class="price">320 ₽</span></div>
+            <div class="dish"><span class="name">Васька тёмное 4,2%, 0,45 л</span><span class="price">330 ₽</span></div>
+            <div class="dish"><span class="name">Васька пшеничное 4,5%, 0,45 л</span><span class="price">320 ₽</span></div>
+            <div class="dish"><span class="name">Синяя борода 8%, 0,75 л</span><span class="price">470 ₽</span></div>
+            <div class="dish"><span class="name">Чехов 6,5%, 0,75 л</span><span class="price">465 ₽</span></div>
+            <div class="dish"><span class="name">IPA безалкогольное 0,0%, 0,5 л</span><span class="price">300 ₽</span></div>
+            <div class="dish"><span class="name">Weizenfeld Weiss 5%, 0,5 л</span><span class="price">340 ₽</span></div>
+            <div class="dish"><span class="name">Weizenfeld Pils 4,5%, 0,5 л</span><span class="price">340 ₽</span></div>
+            <div class="dish"><span class="name">Cidre Brut 5%, 0,75 л</span><span class="price">490 ₽</span></div>
+            <div class="dish"><span class="name">Cidre Rose 4,7%, 0,75 л</span><span class="price">490 ₽</span></div>
+            <div class="dish"><span class="name">Pineapple Ale 6,9%, 0,33 л</span><span class="price">320 ₽</span></div>
+            <div class="dish"><span class="name">Framboise Ale, 0,33 л</span><span class="price">320 ₽</span></div>
+            <div class="dish"><span class="name">Grapefruit Ale 6,9%, 0,33 л</span><span class="price">320 ₽</span></div>
+            <div class="dish"><span class="name">Тройной пшеничный эль 6,9%, 0,75 л</span><span class="price">465 ₽</span></div>
+          </div>
+          </div>
+        </div>
+
+        <div class="panel" data-section="bar" data-cat="cocktails" hidden>
+          <div class="panel-body">
+          <div class="dish-grid">
+            <div class="dish"><span class="name">Ежевика & мороша<small>джин, кардинал «ежевика», сироп «тундра»</small></span><span class="price">440 ₽</span></div>
+            <div class="dish"><span class="name">Mохито ROSE<small>светлый ром, розовое игристое, малина</small></span><span class="price">440 ₽</span></div>
+            <div class="dish"><span class="name">Mango Star<small>игристое, манго&lime, фреш манго</small></span><span class="price">450 ₽</span></div>
+            <div class="dish"><span class="name">Зелёная фея<small>ром, киви-фейхоа, манго</small></span><span class="price">440 ₽</span></div>
+            <div class="dish"><span class="name">Голубая лагуна<small>ром, трипл сек, блю кюрасао</small></span><span class="price">420 ₽</span></div>
+            <div class="dish"><span class="name">Martini Fiero<small>мартини фиеро, индиан тоник</small></span><span class="price">410 ₽</span></div>
+            <div class="dish"><span class="name">Апероль классический<small>просекко, апероль, тоник</small></span><span class="price">460 ₽</span></div>
+            <div class="dish"><span class="name">Джин & грех<small>джин, грейпфрут, персик</small></span><span class="price">430 ₽</span></div>
+            <div class="dish"><span class="name">Глинтвейн классический<small>красное сухое, корица, специи</small></span><span class="price">480 ₽</span></div>
+            <div class="dish"><span class="name">Белый глинтвейн<small>белое полусухое, яблоко, груша</small></span><span class="price">495 ₽</span></div>
+          </div>
+          </div>
+        </div>
+
+        <div class="panel" data-section="bar" data-cat="shots" hidden>
+          <div class="panel-body">
+          <p class="panel-sub">Шоты, 50 мл</p>
+          <div class="dish-grid">
+            <div class="dish"><span class="name">«Боярский»</span><span class="price">285 ₽</span></div>
+            <div class="dish"><span class="name">«Остатки совести»</span><span class="price">290 ₽</span></div>
+            <div class="dish"><span class="name">«Серебряная пуля»</span><span class="price">300 ₽</span></div>
+            <div class="dish"><span class="name">«Яблочный сауэр»</span><span class="price">295 ₽</span></div>
+            <div class="dish"><span class="name">«MOJNO»</span><span class="price">300 ₽</span></div>
+            <div class="dish"><span class="name">«Медуза»</span><span class="price">290 ₽</span></div>
+            <div class="dish"><span class="name">«Зелёный змей»</span><span class="price">295 ₽</span></div>
+            <div class="dish"><span class="name">«Drunk apricot»</span><span class="price">290 ₽</span></div>
+          </div>
+          <p class="panel-sub">Сеты</p>
+          <div class="dish-grid">
+            <div class="dish"><span class="name">«Бонни и Клайд», 4 шота по 50 мл</span><span class="price">1100 ₽</span></div>
+            <div class="dish"><span class="name">«Тяжёлые будни», 5 шотов по 50 мл</span><span class="price">1350 ₽</span></div>
+            <div class="dish"><span class="name">«Кривая дорожка», 8 шотов по 50 мл</span><span class="price">1550 ₽</span></div>
+          </div>
+          </div>
+        </div>
+
+        <div class="panel" data-section="bar" data-cat="spirits" hidden>
+          <div class="panel-body">
+          <p class="panel-sub">Виски, 50 мл</p>
+          <div class="dish-grid">
+            <div class="dish"><span class="name">Jack Daniel's, США</span><span class="price">400 ₽</span></div>
+            <div class="dish"><span class="name">Johnnie Walker Red Label, Шотландия</span><span class="price">380 ₽</span></div>
+            <div class="dish"><span class="name">Loch Lomond Single Malt 12YO</span><span class="price">520 ₽</span></div>
+            <div class="dish"><span class="name">Inchmoan Single Malt 12YO</span><span class="price">510 ₽</span></div>
+          </div>
+          <p class="panel-sub">Джин · Коньяк, 50 мл</p>
+          <div class="dish-grid">
+            <div class="dish"><span class="name">Barrister Dry</span><span class="price">220 ₽</span></div>
+            <div class="dish"><span class="name">Roullet V.S.O.P., Франция</span><span class="price">480 ₽</span></div>
+            <div class="dish"><span class="name">Roullet V.S., Франция</span><span class="price">360 ₽</span></div>
+            <div class="dish"><span class="name">Дербент 5*, Россия</span><span class="price">290 ₽</span></div>
+            <div class="dish"><span class="name">Дербент 3*, Россия</span><span class="price">270 ₽</span></div>
+            <div class="dish"><span class="name">Sanatreli 5*, Грузия</span><span class="price">260 ₽</span></div>
+          </div>
+          <p class="panel-sub">Водка · Текила · Ром, 50 мл</p>
+          <div class="dish-grid">
+            <div class="dish"><span class="name">Beluga, Россия</span><span class="price">280 ₽</span></div>
+            <div class="dish"><span class="name">Царская, Россия</span><span class="price">200 ₽</span></div>
+            <div class="dish"><span class="name">La Arenita Plata (gold), Мексика</span><span class="price">320 ₽</span></div>
+            <div class="dish"><span class="name">La Arenita Plata (silver), Мексика</span><span class="price">300 ₽</span></div>
+            <div class="dish"><span class="name">Viejo de Caldas Tradicional, Колумбия</span><span class="price">270 ₽</span></div>
+            <div class="dish"><span class="name">Fruko Schulz Absinth, Чехия</span><span class="price">320 ₽</span></div>
+          </div>
+          </div>
+        </div>
+
+        <div class="panel" data-section="bar" data-cat="wine" hidden>
+          <div class="panel-body">
+          <p class="panel-sub">Бутылка / бокал, ₽</p>
+          <div class="dish-grid">
+            <div class="dish"><span class="name">Teliani Valley Kindzmarauli<small>Грузия, красное полусладкое</small></span><span class="price">2100/460</span></div>
+            <div class="dish"><span class="name">Teliani Valley Saperavi<small>Грузия, красное сухое</small></span><span class="price">1950 ₽</span></div>
+            <div class="dish"><span class="name">Teliani Valley Alazani Valley<small>Грузия, белое полусладкое</small></span><span class="price">1850/320</span></div>
+            <div class="dish"><span class="name">Cotes de Gascogne<small>Франция, белое сухое</small></span><span class="price">1750/370</span></div>
+            <div class="dish"><span class="name">Domaine Laffitte, Malbec<small>Франция, красное сухое</small></span><span class="price">2300 ₽</span></div>
+            <div class="dish"><span class="name">Vinho Verde PAVÃO<small>Португалия, белое сухое</small></span><span class="price">2100/460</span></div>
+            <div class="dish"><span class="name">Curicano Chardonnay DO<small>Чили, белое сухое</small></span><span class="price">1750/370</span></div>
+            <div class="dish"><span class="name">Casa San Nicola Amabile<small>Италия, белое полусладкое</small></span><span class="price">1600/330</span></div>
+            <div class="dish"><span class="name">Desono Chardonnay<small>Россия, белое сухое</small></span><span class="price">1750/360</span></div>
+            <div class="dish"><span class="name">Black Sea Collection Muscat<small>Россия, белое сухое</small></span><span class="price">1800/380</span></div>
+            <div class="dish"><span class="name">Malizioso Prosecco DOC<small>Италия, белое брют</small></span><span class="price">2500/480</span></div>
+            <div class="dish"><span class="name">Bolla Prosecco Conegliano<small>Италия, белое брют</small></span><span class="price">2600 ₽</span></div>
+          </div>
+          </div>
+        </div>
+
+        <div class="panel" data-section="bar" data-cat="coffee" hidden>
+          <div class="panel-body">
+          <p class="panel-sub">Кофе, 40/60 мл</p>
+          <div class="dish-grid">
+            <div class="dish"><span class="name">Эспрессо</span><span class="price">180/220 ₽</span></div>
+            <div class="dish"><span class="name">Американо</span><span class="price">200/240 ₽</span></div>
+            <div class="dish"><span class="name">Капучино</span><span class="price">210/250 ₽</span></div>
+            <div class="dish"><span class="name">Латте</span><span class="price">210/250 ₽</span></div>
+            <div class="dish"><span class="name">Раф</span><span class="price">240/280 ₽</span></div>
+            <div class="dish"><span class="name">Флэт Уайт</span><span class="price">235/275 ₽</span></div>
+          </div>
+          <p class="panel-sub">Нескучный кофе</p>
+          <div class="dish-grid">
+            <div class="dish"><span class="name">Капучино «Сливочный каштан»</span><span class="price">280 ₽</span></div>
+            <div class="dish"><span class="name">Капучино «Бельгийская вафля»</span><span class="price">280 ₽</span></div>
+            <div class="dish"><span class="name">Латте «Малиновый чизкейк»</span><span class="price">280 ₽</span></div>
+            <div class="dish"><span class="name">Раф «Лаванда & черника»</span><span class="price">300 ₽</span></div>
+          </div>
+          <p class="panel-sub">Чай, 500/800 мл</p>
+          <div class="dish-grid">
+            <div class="dish"><span class="name">Чёрная магия</span><span class="price">200/220 ₽</span></div>
+            <div class="dish"><span class="name">Молочный улун</span><span class="price">200/220 ₽</span></div>
+            <div class="dish"><span class="name">Женьшеневый улун</span><span class="price">250/270 ₽</span></div>
+            <div class="dish"><span class="name">Травяной</span><span class="price">280/330 ₽</span></div>
+          </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="menu-note">
+        <span>🌱 веганские позиции отмечены в полной карте</span>
+        <span>！ об аллергиях — предупредите официанта</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="location" id="location">
+    <div class="wrap location-top">
+      <div>
+        <p class="eyebrow">Где нас найти</p>
+        <h2>Приходите в гости</h2>
+        <div class="info-row">
+          <div class="label">Адрес</div>
+          <div class="value">ул. Николаева, 26<br><small>Смоленск, Смоленская обл., 214004</small></div>
+        </div>
+        <div class="info-row">
+          <div class="label">Завтраки</div>
+          <div class="value">10:00 — 12:00 ежедневно</div>
+        </div>
+        <div class="info-row">
+          <div class="label">Кухня и бар</div>
+          <div class="value">весь день, до поздна</div>
+        </div>
+        <div style="margin-top:24px;">
+          <button class="btn btn-primary" data-reserve-open>Забронировать стол</button>
+        </div>
+      </div>
+      <div class="location-visual">
+        <svg class="mark" viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="12" r="7" fill="var(--rose)" opacity="0.85"/>
+          <circle cx="29" cy="24" r="7" fill="var(--gold)" opacity="0.8"/>
+          <circle cx="11" cy="24" r="7" fill="var(--moss)" opacity="0.75"/>
+          <circle cx="20" cy="20" r="5" fill="var(--bg)"/>
+        </svg>
+      </div>
+    </div>
+
+    <div class="map-embed">
+      <iframe src="https://yandex.ru/map-widget/v1/?text=Смоленск%2C%20ул.%20Николаева%2C%2026&z=16" allowfullscreen="true" loading="lazy"></iframe>
+      <div class="wrap map-fallback">
+        <span>ул. Николаева, 26, Смоленск</span>
+        <a href="https://yandex.ru/maps/?text=Смоленск, ул. Николаева, 26" target="_blank" rel="noopener">Открыть в Яндекс Картах →</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-row">
+      <a href="#" class="logo">
+        <svg class="mark" viewBox="0 0 40 40" fill="none">
+          <circle cx="20" cy="12" r="7" fill="var(--rose)" opacity="0.85"/>
+          <circle cx="29" cy="24" r="7" fill="var(--gold)" opacity="0.8"/>
+          <circle cx="11" cy="24" r="7" fill="var(--moss)" opacity="0.75"/>
+          <circle cx="20" cy="20" r="5" fill="var(--bg)"/>
+        </svg>
+        MOJNO
+      </a>
+      <div class="footer-links">
+        <a href="#format">Формат</a>
+        <a href="#menu">Меню</a>
+        <a href="#location">Адрес</a>
+      </div>
+    </div>
+    <p class="footer-slogan">Место, где обед случайно превращается в вечер.</p>
+    <div class="footer-bottom">
+      <span>© 2026 MOJNO гастрокафе</span>
+      <span>ул. Николаева, 26, Смоленск</span>
+    </div>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="reserveOverlay" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="reserveTitle">
+    <button class="modal-close" id="reserveClose" aria-label="Закрыть">✕</button>
+
+    <div id="reserveFormWrap">
+      <h3 id="reserveTitle">Забронировать стол</h3>
+      <p class="modal-sub">Заполните форму — откроется Telegram с готовым сообщением, останется нажать «Отправить».</p>
+      <form id="reserveForm">
+        <label>Имя
+          <input type="text" name="name" required>
+        </label>
+        <div class="form-row">
+          <label>Дата
+            <input type="date" name="date" required>
+          </label>
+          <label>Время
+            <input type="time" name="time" required>
+          </label>
+        </div>
+        <label>Телефон
+          <input type="tel" name="phone" required placeholder="+7 900 000-00-00">
+        </label>
+        <label>Гостей
+          <select name="guests">
+            <option>1</option><option selected>2</option><option>3</option><option>4</option><option>5+</option>
+          </select>
+        </label>
+        <label>Комментарий
+          <textarea name="comment" rows="2" placeholder="Пожелания по столу"></textarea>
+        </label>
+        <button type="submit" class="btn btn-primary" style="width:100%; margin-top:6px;">Отправить заявку</button>
+      </form>
+    </div>
+
+    <div id="reserveSuccess" hidden>
+      <h3>Открываем Telegram</h3>
+      <p class="modal-sub">Мы собрали сообщение с деталями брони и открыли чат с @Sqw1zzzyyy — проверьте текст и нажмите «Отправить» в Telegram, чтобы заявка дошла.</p>
+      <button class="btn btn-ghost" id="reserveAgain" style="width:100%;">Готово</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // menu tabs
+  const sectionBtns = document.querySelectorAll('[data-section-btn]');
+  const catGroups = document.querySelectorAll('.menu-cats');
+  const panels = document.querySelectorAll('.panel');
+
+  function showSection(section){
+    sectionBtns.forEach(b => b.classList.toggle('active', b.dataset.sectionBtn === section));
+    catGroups.forEach(g => g.hidden = g.dataset.sectionGroup !== section);
+    const activeGroup = [...catGroups].find(g => g.dataset.sectionGroup === section);
+    const firstCat = activeGroup.querySelector('.cat-chip').dataset.catBtn;
+    activeGroup.querySelectorAll('.cat-chip').forEach(c => c.classList.toggle('active', c.dataset.catBtn === firstCat));
+    showPanel(section, firstCat);
+  }
+  function showPanel(section, cat){
+    panels.forEach(p => { p.hidden = !(p.dataset.section === section && p.dataset.cat === cat); });
+  }
+  sectionBtns.forEach(btn => btn.addEventListener('click', () => showSection(btn.dataset.sectionBtn)));
+  catGroups.forEach(group => {
+    group.querySelectorAll('.cat-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        group.querySelectorAll('.cat-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        showPanel(group.dataset.sectionGroup, chip.dataset.catBtn);
+      });
+    });
+  });
+
+  // reservation modal
+  const overlay = document.getElementById('reserveOverlay');
+  const openBtns = document.querySelectorAll('[data-reserve-open]');
+  const closeBtn = document.getElementById('reserveClose');
+  const form = document.getElementById('reserveForm');
+  const formWrap = document.getElementById('reserveFormWrap');
+  const success = document.getElementById('reserveSuccess');
+  const againBtn = document.getElementById('reserveAgain');
+  const submitBtn = document.getElementById('submitBtn');
+
+  function openModal(){
+    overlay.hidden = false;
+    formWrap.hidden = false;
+    success.hidden = true;
+    document.body.style.overflow = 'hidden';
+    overlay.querySelector('input, select, textarea, button').focus();
+  }
+  function closeModal(){
+    overlay.hidden = true;
+    document.body.style.overflow = '';
+  }
+
+  openBtns.forEach(b => b.addEventListener('click', openModal));
+  closeBtn.addEventListener('click', closeModal);
+  overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !overlay.hidden) closeModal(); });
+
+  // ССЫЛКА НА ВАШ CLOUDFLARE WORKER
+  const WORKER_URL = 'https://wild-dust-6b9c.mraprill27.workers.dev/';
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    if (submitBtn) {
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Отправка...';
+    }
+
+    const formData = new FormData(form);
+    const payload = {
+      name: formData.get('name'),
+      date: formData.get('date'),
+      time: formData.get('time'),
+      phone: formData.get('phone'),
+      guests: formData.get('guests'),
+      comment: formData.get('comment')
+    };
+
+    try {
+      const res = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.ok) {
+        formWrap.hidden = true;
+        success.hidden = false;
+        const successBtn = success.querySelector('button');
+        if (successBtn) successBtn.focus();
+      } else {
+        alert('Ошибка при отправке заявки.');
+      }
+    } catch (err) {
+      alert('Не удалось связаться с сервером.');
+    } finally {
+      if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Отправить заявку';
+      }
+    }
+  });
+
+  againBtn.addEventListener('click', () => {
+    form.reset();
+    closeModal();
+  });
+</script>
+</body>
+</html>
